@@ -1,5 +1,6 @@
 package com.mauriciotogneri.mockserver.test;
 
+import com.mauriciotogneri.javautils.Randomized;
 import com.mauriciotogneri.mockserver.EndPoint;
 import com.mauriciotogneri.mockserver.MockServer;
 
@@ -24,7 +25,9 @@ public class ExampleTest
         List<EndPoint> endPoints = new ArrayList<>();
         endPoints.add(new ExampleEndpoint());
 
-        MockServer mockServer = new MockServer(8080, endPoints);
+        int port = Randomized.of(1024, 9999);
+
+        MockServer mockServer = new MockServer(port, endPoints);
         mockServer.start();
 
         OkHttpClient client = new OkHttpClient();
@@ -34,7 +37,7 @@ public class ExampleTest
         RequestBody requestBody = RequestBody.create(JSON, json);
 
         Request request = new Request.Builder()
-                .url("http://localhost:8080/path/endpoint?foo=bar")
+                .url("http://localhost:" + port + "/path/endpoint?foo=bar")
                 .header("Cookie", "FOO=BAR")
                 .header("Content-Type", "application/json")
                 .post(requestBody)
