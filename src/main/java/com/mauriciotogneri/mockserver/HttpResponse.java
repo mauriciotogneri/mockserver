@@ -8,6 +8,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.mockwebserver.MockResponse;
+
 public class HttpResponse
 {
     private final HttpResponseCode code;
@@ -19,6 +21,11 @@ public class HttpResponse
         this.code = code;
         this.headers = headers;
         this.body = body;
+    }
+
+    public MockResponse response()
+    {
+        return null; // TODO
     }
 
     public void respond(OutputStream outputStream) throws IOException

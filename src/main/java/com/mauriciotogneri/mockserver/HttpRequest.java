@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.mockwebserver.RecordedRequest;
+
 public class HttpRequest
 {
     private final String method;
@@ -23,6 +25,16 @@ public class HttpRequest
     private final List<String> cookies;
     private final Map<String, String> headers;
     private final String body;
+
+    public HttpRequest(RecordedRequest recordedRequest)
+    {
+        this.method = recordedRequest.getMethod();
+        this.route = recordedRequest.getPath();
+        this.path = pathRoute(route);
+        this.cookies = null;
+        this.headers = null;
+        this.body = null;
+    }
 
     public HttpRequest(String method, String route, List<String> cookies, Map<String, String> headers, String body)
     {
