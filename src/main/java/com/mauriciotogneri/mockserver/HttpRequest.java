@@ -2,12 +2,8 @@ package com.mauriciotogneri.mockserver;
 
 import com.mauriciotogneri.javautils.Encoding;
 import com.mauriciotogneri.javautils.Json;
-import com.mauriciotogneri.javautils.Strings;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +11,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Headers;
 import okhttp3.mockwebserver.RecordedRequest;
+import okio.Buffer;
 
 public class HttpRequest
 {
@@ -24,26 +22,16 @@ public class HttpRequest
     private final String path;
     private final List<String> cookies;
     private final Map<String, String> headers;
-    private final String body;
+    private final Buffer body;
 
     public HttpRequest(RecordedRequest recordedRequest)
     {
         this.method = recordedRequest.getMethod();
         this.route = recordedRequest.getPath();
         this.path = pathRoute(route);
-        this.cookies = null;
-        this.headers = null;
-        this.body = null;
-    }
-
-    public HttpRequest(String method, String route, List<String> cookies, Map<String, String> headers, String body)
-    {
-        this.method = method;
-        this.route = route;
-        this.path = pathRoute(route);
-        this.cookies = cookies;
-        this.headers = headers;
-        this.body = body;
+        this.cookies = cookies(recordedRequest.getHeaders());
+        this.headers = headers(recordedRequest.getHeaders());
+        this.body = recordedRequest.getBody();
     }
 
     private String pathRoute(String route)
@@ -51,6 +39,36 @@ public class HttpRequest
         int paramsStart = route.indexOf("?");
 
         return (paramsStart == -1) ? route : route.substring(0, paramsStart);
+    }
+
+    private List<String> cookies(Headers headers)
+    {
+        List<String> result = new ArrayList<>();
+
+        for (String name : headers.names())
+        {
+            if (name.toLowerCase().equals("cookie"))
+            {
+                result.add(headers.get(name).trim());
+            }
+        }
+
+        return result;
+    }
+
+    private Map<String, String> headers(Headers headers)
+    {
+        Map<String, String> result = new HashMap<>();
+
+        for (String name : headers.names())
+        {
+            if (!name.toLowerCase().equals("cookie"))
+            {
+                result.put(name, headers.get(name).trim());
+            }
+        }
+
+        return result;
     }
 
     public boolean matches(String method, String pattern)
@@ -80,12 +98,12 @@ public class HttpRequest
 
     public String body()
     {
-        return body;
+        return body.readString(Charset.forName("UTF-8"));
     }
 
     public <T> T body(Class<T> clazz)
     {
-        return Json.object(body, clazz);
+        return Json.object(body(), clazz);
     }
 
     public List<String> path(String regex)
@@ -153,7 +171,7 @@ public class HttpRequest
 
         try
         {
-            String[] parts = body.split("&");
+            String[] parts = body().split("&");
 
             for (String part : parts)
             {
@@ -182,58 +200,5 @@ public class HttpRequest
     public <T> T form(Class<T> clazz)
     {
         return Json.object(form(), clazz);
-    }
-
-    public static HttpRequest fromInputStream(InputStream inputStream) throws IOException
-    {
-        String method = null;
-        String route = null;
-        List<String> cookies = new ArrayList<>();
-        Map<String, String> headers = new HashMap<>();
-        String body = null;
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-
-        int contentLength = 0;
-
-        while (Strings.isNotEmpty(line = reader.readLine()))
-        {
-            if ((method == null) || (route == null))
-            {
-                String[] parts = line.split(" ");
-                method = parts[0];
-                route = parts[1];
-            }
-            else
-            {
-                if (line.startsWith("Content-Length:"))
-                {
-                    contentLength = Integer.parseInt(line.replace("Content-Length:", "").trim());
-                }
-
-                String[] parts = line.split(":");
-                String name = parts[0];
-                String value = parts[1];
-
-                if (name.equals("Cookie"))
-                {
-                    cookies.add(value);
-                }
-                else
-                {
-                    headers.put(name.trim(), value.trim());
-                }
-            }
-        }
-
-        if (contentLength != 0)
-        {
-            char[] buffer = new char[contentLength];
-            reader.read(buffer);
-            body = new String(buffer);
-        }
-
-        return new HttpRequest(method, route, cookies, headers, body);
     }
 }

@@ -2,21 +2,21 @@ package com.mauriciotogneri.mockserver;
 
 import com.mauriciotogneri.javautils.Json;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import okhttp3.mockwebserver.MockResponse;
+import okio.Buffer;
 
 public class HttpResponse
 {
     private final HttpResponseCode code;
-    private final List<String> headers;
+    private final Map<String, String> headers;
     private final byte[] body;
 
-    public HttpResponse(HttpResponseCode code, List<String> headers, byte[] body)
+    public HttpResponse(HttpResponseCode code, Map<String, String> headers, byte[] body)
     {
         this.code = code;
         this.headers = headers;
@@ -25,50 +25,37 @@ public class HttpResponse
 
     public MockResponse response()
     {
-        return null; // TODO
-    }
+        MockResponse response = new MockResponse();
+        response.setResponseCode(code.code);
 
-    public void respond(OutputStream outputStream) throws IOException
-    {
-        try (PrintStream output = new PrintStream(outputStream))
+        for (Entry<String, String> entry : headers.entrySet())
         {
-            output.println(String.format("HTTP/1.0 %s", code));
-
-            for (String header : headers)
-            {
-                output.println(header);
-            }
-
-            if (body != null)
-            {
-                output.println("Content-Length: " + body.length);
-                output.println();
-                output.write(body);
-            }
-            else
-            {
-                output.println();
-            }
-
-            output.flush();
+            response.setHeader(entry.getKey(), entry.getValue());
         }
+
+        if (body != null)
+        {
+            response.setBody(new Buffer().write(body));
+        }
+
+        return response;
     }
 
     public static class Builder
     {
         private final HttpResponseCode code;
-        private final List<String> headers;
+        private final Map<String, String> headers;
         private byte[] body;
 
         public Builder(HttpResponseCode code)
         {
             this.code = code;
-            this.headers = new ArrayList<>();
+            this.headers = new HashMap<>();
         }
 
         public Builder header(String name, String value)
         {
-            headers.add(String.format("%s: %s", name, value));
+            headers.put(name, value);
 
             return this;
         }
