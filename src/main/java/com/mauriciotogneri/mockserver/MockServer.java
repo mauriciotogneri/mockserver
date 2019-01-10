@@ -14,7 +14,7 @@ public class MockServer extends Dispatcher
     private final MockWebServer server;
     private final List<EndPoint> endPoints;
 
-    public MockServer(Integer port, List<EndPoint> endPoints)
+    public MockServer(int port, List<EndPoint> endPoints)
     {
         this.port = port;
         this.endPoints = endPoints;
@@ -48,15 +48,6 @@ public class MockServer extends Dispatcher
             return onNotFound(httpRequest).response();
         }
     }
-
-//     if (request.getPath().equals("/v1/login/auth/")){
-//    return new MockResponse().setResponseCode(200);
-//} else if (request.getPath().equals("v1/check/version/")){
-//    return new MockResponse().setResponseCode(200).setBody("version=9");
-//} else if (request.getPath().equals("/v1/profile/info")) {
-//    return new MockResponse().setResponseCode(200).setBody("{\\\"info\\\":{\\\"name\":\"Lucas Albuquerque\",\"age\":\"21\",\"gender\":\"male\"}}");
-//}
-//        return new MockResponse().setResponseCode(404);
 
     private EndPoint endPoint(HttpRequest httpRequest)
     {
