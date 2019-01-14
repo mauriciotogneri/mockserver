@@ -22,7 +22,8 @@ public class HttpRequest
     private final String path;
     private final List<String> cookies;
     private final Map<String, String> headers;
-    private final Buffer body;
+    private final Buffer bufferBody;
+    private String body;
 
     public HttpRequest(RecordedRequest recordedRequest)
     {
@@ -31,7 +32,7 @@ public class HttpRequest
         this.path = pathRoute(route);
         this.cookies = cookies(recordedRequest.getHeaders());
         this.headers = headers(recordedRequest.getHeaders());
-        this.body = recordedRequest.getBody();
+        this.bufferBody = recordedRequest.getBody();
     }
 
     private String pathRoute(String route)
@@ -98,7 +99,12 @@ public class HttpRequest
 
     public String body()
     {
-        return body.readString(Charset.forName("UTF-8"));
+        if (body == null)
+        {
+            body = bufferBody.readString(Charset.forName("UTF-8"));
+        }
+
+        return body;
     }
 
     public <T> T body(Class<T> clazz)
