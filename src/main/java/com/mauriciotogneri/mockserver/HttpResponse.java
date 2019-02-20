@@ -26,7 +26,7 @@ public class HttpResponse
     public MockResponse response()
     {
         MockResponse response = new MockResponse();
-        response.setResponseCode(code.code);
+        response.setResponseCode(code.code());
 
         for (Entry<String, String> entry : headers.entrySet())
         {
