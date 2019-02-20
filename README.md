@@ -32,6 +32,6 @@ or if you use Gradle:
 ```groovy
 dependencies
 {
-    implementation 'com.mauriciotogneri:mockserver:1.2.0'
+    implementation 'com.mauriciotogneri:mockserver:1.3.0'
 }
 ```
