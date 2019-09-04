@@ -23,7 +23,7 @@ and the dependency:
 <dependency>
     <groupId>com.mauriciotogneri</groupId>
     <artifactId>mockserver</artifactId>
-    <version>1.0.1</version>
+    <version>1.5.0</version>
 </dependency>
 ```
 
@@ -32,6 +32,6 @@ or if you use Gradle:
 ```groovy
 dependencies
 {
-    implementation 'com.mauriciotogneri:mockserver:1.4.0'
+    implementation 'com.mauriciotogneri:mockserver:1.5.0'
 }
 ```

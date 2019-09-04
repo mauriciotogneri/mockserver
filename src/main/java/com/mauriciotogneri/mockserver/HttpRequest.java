@@ -119,9 +119,12 @@ public class HttpRequest
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(route);
 
-        while (matcher.find())
+        if (matcher.find())
         {
-            result.add(matcher.group(1).trim());
+            for (int i = 0; i < matcher.groupCount(); i++)
+            {
+                result.add(matcher.group(i + 1).trim());
+            }
         }
 
         return result;
