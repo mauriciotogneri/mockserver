@@ -40,15 +40,22 @@ public class MockServer extends Dispatcher
     {
         HttpRequest httpRequest = new HttpRequest(recordedRequest);
 
-        EndPoint endPoint = endPoint(httpRequest);
+        try
+        {
+            EndPoint endPoint = endPoint(httpRequest);
 
-        if (endPoint != null)
-        {
-            return endPoint.process(httpRequest).response();
+            if (endPoint != null)
+            {
+                return endPoint.process(httpRequest).response();
+            }
+            else
+            {
+                return onNotFound(httpRequest).response();
+            }
         }
-        else
+        catch (Exception e)
         {
-            return onNotFound(httpRequest).response();
+            return onError(httpRequest).response();
         }
     }
 
@@ -68,5 +75,10 @@ public class MockServer extends Dispatcher
     protected HttpResponse onNotFound(HttpRequest httpRequest)
     {
         return new HttpResponse.Builder(HttpResponseCode.NOT_FOUND).build();
+    }
+
+    protected HttpResponse onError(HttpRequest httpRequest)
+    {
+        return new HttpResponse.Builder(HttpResponseCode.INTERNAL_SERVER_ERROR).build();
     }
 }
