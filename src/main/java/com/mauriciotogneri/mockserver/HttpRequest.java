@@ -2,6 +2,7 @@ package com.mauriciotogneri.mockserver;
 
 import com.mauriciotogneri.javautils.Encoding;
 import com.mauriciotogneri.javautils.Json;
+import com.mauriciotogneri.javautils.Strings;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -141,22 +142,25 @@ public class HttpRequest
     {
         Map<String, String> result = new HashMap<>();
 
-        try
+        if (route.contains("?"))
         {
-            String[] parts = route.split("\\?")[1].split("&");
-
-            for (String part : parts)
+            try
             {
-                String[] param = part.split("=");
-                String name = param[0].trim();
-                String value = (param.length > 1) ? Encoding.urlDecode(param[1]).trim() : "";
+                String[] parts = route.split("\\?")[1].split("&");
 
-                result.put(name, value);
+                for (String part : parts)
+                {
+                    String[] param = part.split("=");
+                    String name = param[0].trim();
+                    String value = (param.length > 1) ? Encoding.urlDecode(param[1]).trim() : "";
+
+                    result.put(name, value);
+                }
             }
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
         }
 
         return result;
@@ -164,9 +168,12 @@ public class HttpRequest
 
     public String query(String name)
     {
-        Map<String, String> map = query();
+        return query().get(name);
+    }
 
-        return map.get(name);
+    public boolean hasQuery(String name)
+    {
+        return Strings.isNotEmpty(query(name));
     }
 
     public <T> T query(Class<T> clazz)
