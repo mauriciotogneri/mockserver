@@ -137,6 +137,11 @@ public abstract class EndPoint
         return new HttpResponse.Builder(HttpResponseCode.INTERNAL_SERVER_ERROR).build();
     }
 
+    protected HttpResponse notImplemented()
+    {
+        return new HttpResponse.Builder(HttpResponseCode.NOT_IMPLEMENTED_).build();
+    }
+
     protected HttpResponse serviceUnavailable()
     {
         return new HttpResponse.Builder(HttpResponseCode.SERVICE_UNAVAILABLE).build();
