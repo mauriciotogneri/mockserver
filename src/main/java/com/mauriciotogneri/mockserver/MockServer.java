@@ -1,5 +1,7 @@
 package com.mauriciotogneri.mockserver;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -32,8 +34,9 @@ public class MockServer extends Dispatcher
         server.shutdown();
     }
 
+    @NotNull
     @Override
-    public MockResponse dispatch(RecordedRequest recordedRequest)
+    public MockResponse dispatch(@NotNull RecordedRequest recordedRequest)
     {
         HttpRequest httpRequest = new HttpRequest(recordedRequest);
 

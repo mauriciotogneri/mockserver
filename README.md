@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/mauriciotogneri/mockserver/blob/master/LICENSE.md)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/mauriciotogneri/mockserver-java/blob/master/LICENSE.md)
 [![Download](https://api.bintray.com/packages/mauriciotogneri/maven/mockserver/images/download.svg)](https://bintray.com/mauriciotogneri/maven/mockserver/_latestVersion)
 
 # Mock Server
@@ -23,7 +23,7 @@ and the dependency:
 <dependency>
     <groupId>com.mauriciotogneri</groupId>
     <artifactId>mockserver</artifactId>
-    <version>1.5.0</version>
+    <version>4.7.2</version>
 </dependency>
 ```
 
@@ -32,6 +32,6 @@ or if you use Gradle:
 ```groovy
 dependencies
 {
-    implementation 'com.mauriciotogneri:mockserver:1.5.0'
+    implementation 'com.mauriciotogneri:mockserver:4.7.2'
 }
 ```

@@ -3,7 +3,7 @@ package com.mauriciotogneri.mockserver;
 import com.mauriciotogneri.javautils.Encoding;
 import com.mauriciotogneri.javautils.Json;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,7 +101,7 @@ public class HttpRequest
     {
         if (body == null)
         {
-            body = bufferBody.readString(Charset.forName("UTF-8"));
+            body = bufferBody.readString(StandardCharsets.UTF_8);
         }
 
         return body;
