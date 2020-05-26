@@ -208,9 +208,12 @@ public class HttpRequest
 
     public String form(String name)
     {
-        Map<String, String> map = form();
+        return form().get(name);
+    }
 
-        return map.get(name);
+    public boolean hasForm(String name)
+    {
+        return Strings.isNotEmpty(form(name));
     }
 
     public <T> T form(Class<T> clazz)
