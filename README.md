@@ -1,37 +1,49 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/mauriciotogneri/mockserver-java/blob/master/LICENSE.md)
-[![Download](https://api.bintray.com/packages/mauriciotogneri/maven/mockserver/images/download.svg)](https://bintray.com/mauriciotogneri/maven/mockserver/_latestVersion)
 
 # Mock Server
 A mock server for Java.
 
-## Installation
+### Maven
 
-Add the following code to your **pom.xml**:
+Add the following code to your `pom.xml`:
 
 ```xml
 <repositories>
     <repository>
-        <id>jcenter</id>
-        <url>https://jcenter.bintray.com</url>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
     </repository>
 </repositories>
 ```
 
-and the dependency:
+And the dependency:
 
 ```xml
 <dependency>
     <groupId>com.mauriciotogneri</groupId>
     <artifactId>mockserver</artifactId>
-    <version>4.7.2</version>
+    <version>4.9.1</version>
 </dependency>
 ```
 
-or if you use Gradle:
+### Gradle
+
+Add the following code to your root `build.gradle`:
 
 ```groovy
-dependencies
+allprojects
 {
-    implementation 'com.mauriciotogneri:mockserver:4.7.2'
+    repositories
+    {
+        maven
+        {
+            url 'https://jitpack.io'
+        }
+    }
 }
+```
+
+Add the following code to your module `build.gradle`:
+```groovy
+implementation 'com.github.mauriciotogneri:mockserver:4.9.1'
 ```
